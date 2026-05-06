@@ -116,9 +116,9 @@ void StartDefaultTask(void *argument)
   /* USER CODE BEGIN StartDefaultTask */
     // LED0 闪烁 500ms
     HAL_GPIO_WritePin(LED0_GPIO_Port, LED0_Pin, GPIO_PIN_SET);
-    HAL_Delay(500);
+    osDelay(500);
     HAL_GPIO_WritePin(LED0_GPIO_Port, LED0_Pin, GPIO_PIN_RESET);
-    HAL_Delay(500);
+    osDelay(500);
   /* USER CODE END StartDefaultTask */
 }
 
