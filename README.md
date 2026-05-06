@@ -12,6 +12,7 @@
 - ✅ 使用 STM32CubeIDE for VS Code 插件
 - ✅ CMake 构建系统，支持 Ninja 生成器
 - ✅ 集成 CMSIS 和 STM32 HAL 驱动库
+- ✅ 集成 FreeRTOS 实时操作系统
 - ✅ 支持 Debug 和 Release 两种构建模式
 - ✅ 支持 J-Link 和 ST-Link 调试
 - ✅ 自动生成 HEX 和 BIN 文件
@@ -45,10 +46,12 @@ Template-STM32F103-V1.0/
 │   │   ├── gpio.h        # GPIO 配置
 │   │   ├── main.h        # 主程序头文件
 │   │   ├── stm32f1xx_hal_conf.h  # HAL 库配置
+│   │   ├── FreeRTOSConfig.h      # FreeRTOS 配置
 │   │   └── stm32f1xx_it.h        # 中断处理函数声明
 │   └── Src/              # 源文件
 │       ├── gpio.c        # GPIO 初始化代码
 │       ├── main.c        # 主程序入口
+│       ├── freertos.c    # FreeRTOS 初始化与任务创建
 │       ├── stm32f1xx_hal_msp.c   # HAL MSP 初始化
 │       ├── stm32f1xx_it.c        # 中断处理函数实现
 │       ├── syscalls.c    # 系统调用实现
@@ -61,6 +64,9 @@ Template-STM32F103-V1.0/
 │   └── STM32F1xx_HAL_Driver/     # STM32 HAL 驱动
 │       ├── Inc/          # HAL 驱动头文件
 │       └── Src/          # HAL 驱动源文件
+├── Middlewares/          # 中间件
+│   └── Third_Party/
+│       └── FreeRTOS/     # FreeRTOS 内核和 CMSIS-RTOS2 适配
 ├── jlink/                # J-Link 调试辅助文件
 │   └── STM32F103.svd     # STM32F103 外设寄存器描述文件
 ├── cmake/                # CMake 配置文件
@@ -94,6 +100,17 @@ Template-STM32F103-V1.0/
 - `cmake/stm32cubemx/CMakeLists.txt` 自动收集 CubeMX 生成的源文件和头文件。
 - 工程主 `CMakeLists.txt` 通过 `add_subdirectory(cmake/stm32cubemx)` 集成 CubeMX 代码。
 - 你可以随时用 CubeMX 重新生成代码，然后直接用 VS Code + CMake 构建，无需手动维护源文件列表。
+
+## ⏱️ FreeRTOS 支持说明
+
+本工程已集成 `FreeRTOS`，并通过 STM32CubeMX 生成的 `Core/Src/freertos.c`、`Core/Inc/FreeRTOSConfig.h` 以及 `Middlewares/Third_Party/FreeRTOS/` 目录下的内核源代码来构建。
+
+- `Core/Src/freertos.c` 包含 RTOS 初始化函数 `MX_FREERTOS_Init()`。
+- `Core/Inc/FreeRTOSConfig.h` 用于配置 FreeRTOS 内核参数，如任务堆栈、时钟节拍、调度选项等。
+- `Middlewares/Third_Party/FreeRTOS/` 包含 FreeRTOS 内核实现、CMSIS-RTOS2 适配层和 ARM_CM3 可移植层。
+- 默认构建会自动包含 FreeRTOS 内核，无需额外手动添加源文件。
+
+> 如果你希望在用户代码中添加任务、定时器或消息队列，请在 `freertos.c` 的 `USER CODE BEGIN` 区域中进行配置，并确保在 `main()` 中调用 `MX_FREERTOS_Init()` 后启动调度器。
 
 ---
 
