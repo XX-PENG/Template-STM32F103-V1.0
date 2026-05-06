@@ -72,5 +72,6 @@ add_custom_command(
     POST_BUILD
     COMMAND ${CMAKE_OBJCOPY} ${CMAKE_PROJECT_NAME}.elf -Oihex ${CMAKE_PROJECT_NAME}.hex
     COMMAND ${CMAKE_OBJCOPY} ${CMAKE_PROJECT_NAME}.elf -Obinary ${CMAKE_PROJECT_NAME}.bin
-    COMMENT "Building hex&bin files"
+    COMMAND ${CMAKE_SIZE} ${CMAKE_PROJECT_NAME}.elf
+    COMMENT "Building hex/bin files"
 )
